@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Restricted</title>
+<style>
+  :root {
+    --bg: #cfe6fb;
+    --ink: #333333;
+    --accent: #1a5fa0;
+    --accent-dark: #164e86;
+    --heading: #1f69ad;
+    --card-border: #1a5fa0;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body { height: 100%; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Arial, Helvetica, "Segoe UI", sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 16px;
+  }
+
+  /* --- top close badge (first screen only) --- */
+  .close-badge {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #3f3f3f;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 44px;
+    border: none;
+    cursor: pointer;
+    flex: none;
+  }
+  .close-badge svg { width: 20px; height: 20px; }
+
+  /* --- centered content block --- */
+  .stage {
+    flex: 1;
+    width: 100%;
+    max-width: 640px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 4px;
+  }
+
+  .title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 44px;
+    font-weight: 800;
+    color: var(--heading);
+    margin: 0 0 14px;
+    line-height: 1;
+  }
+  .title svg { width: 42px; height: 42px; flex: none; }
+
+  .subtitle {
+    font-size: 20px;
+    color: #2b2b2b;
+    margin: 0 0 18px;
+  }
+
+  .btn {
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 700;
+    border-radius: 6px;
+    padding: 11px 20px;
+    cursor: pointer;
+    border: 1px solid transparent;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+  }
+  .btn-primary:hover { background: var(--accent-dark); border-color: var(--accent-dark); }
+
+  .btn-secondary {
+    background: #fff;
+    color: var(--accent);
+    border-color: var(--accent);
+  }
+  .btn-secondary:hover { background: #eef5fc; }
+
+  /* --- password form --- */
+  .pw-label {
+    align-self: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #1c1c1c;
+    margin-bottom: 8px;
+  }
+  .pw-input {
+    width: 300px;
+    max-width: 100%;
+    padding: 9px 10px;
+    font-size: 15px;
+    border: 2px solid var(--accent);
+    border-radius: 3px;
+    outline: none;
+    margin-bottom: 18px;
+  }
+  .pw-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+  .error {
+    color: #b4231f;
+    font-size: 14px;
+    min-height: 18px;
+    margin-bottom: 4px;
+  }
+
+  /* --- unlocked view --- */
+  .granted .title { color: #1b7a39; }
+  .content-area {
+    width: 100%;
+    max-width: 640px;
+    margin-top: 10px;
+    padding: 24px;
+    background: #ffffff;
+    border: 1px solid #b9d7f2;
+    border-radius: 8px;
+    text-align: left;
+    color: #333;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+  <!-- top-of-page close badge -->
+  <button class="close-badge" id="closeBadge" title="Close" aria-label="Close">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+      <path d="M5 5 L19 19 M19 5 L5 19"/>
+    </svg>
+  </button>
+
+  <main class="stage" id="stage">
+
+    <!-- ===== Screen 1: block notice ===== -->
+    <section id="screenBlock">
+      <h1 class="title">
+        <svg viewBox="0 0 24 24" fill="#1f69ad">
+          <path d="M12 2 L22 20 H2 Z" />
+          <rect x="11" y="9" width="2" height="6" fill="#cfe6fb"/>
+          <rect x="11" y="16" width="2" height="2" fill="#cfe6fb"/>
+        </svg>
+        Restricted
+      </h1>
+      <p class="subtitle">This website has been blocked.</p>
+      <button class="btn btn-primary" id="bypassBtn">Bypass Block Page</button>
+    </section>
+
+    <!-- ===== Screen 2: password prompt ===== -->
+    <section id="screenPassword" class="hidden">
+      <h1 class="title">
+        <svg viewBox="0 0 24 24" fill="#1f69ad">
+          <path d="M12 2 L22 20 H2 Z" />
+          <rect x="11" y="9" width="2" height="6" fill="#cfe6fb"/>
+          <rect x="11" y="16" width="2" height="2" fill="#cfe6fb"/>
+        </svg>
+        Restricted
+      </h1>
+      <p class="subtitle">This website has been blocked.</p>
+
+      <form id="pwForm" autocomplete="off">
+        <div class="pw-label">Enter Bypass Password</div>
+        <input class="pw-input" type="password" id="pwInput" aria-label="Bypass password" />
+        <div class="error" id="pwError"></div>
+        <div class="pw-actions">
+          <button class="btn btn-primary" type="submit">Submit</button>
+          <button class="btn btn-secondary" type="button" id="cancelBtn">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===== Screen 3: unlocked ===== -->
+    <section id="screenGranted" class="hidden granted">
+      <h1 class="title">
+        <svg viewBox="0 0 24 24" fill="#1b7a39">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="M7 12.5 L10.5 16 L17 8.5" fill="none" stroke="#cfe6fb" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        Access Granted
+      </h1>
+      <p class="subtitle">You're in.</p>
+      <div class="content-area" id="contentArea">
+        <!-- Whatever you want shown after unlocking goes here. -->
+        <p>This is the unlocked area. Tell me what should appear here and I'll build it in.</p>
+      </div>
+    </section>
+
+  </main>
+
+<script>
+  (function () {
+    var PASSWORD = "room32!";
+
+    // Confirm before leaving / closing the tab, armed as soon as the page loads.
+    window.addEventListener("beforeunload", function (e) {
+      e.preventDefault();
+      e.returnValue = "";          // triggers the browser's generic "Leave site?" dialog
+    });
+
+    var closeBadge   = document.getElementById("closeBadge");
+    var screenBlock  = document.getElementById("screenBlock");
+    var screenPass   = document.getElementById("screenPassword");
+    var screenGrant  = document.getElementById("screenGranted");
+    var bypassBtn    = document.getElementById("bypassBtn");
+    var cancelBtn    = document.getElementById("cancelBtn");
+    var pwForm       = document.getElementById("pwForm");
+    var pwInput      = document.getElementById("pwInput");
+    var pwError      = document.getElementById("pwError");
+
+    function show(el) {
+      [screenBlock, screenPass, screenGrant].forEach(function (s) {
+        s.classList.add("hidden");
+      });
+      el.classList.remove("hidden");
+      // close badge only belongs on the first screen
+      closeBadge.classList.toggle("hidden", el !== screenBlock);
+    }
+
+    bypassBtn.addEventListener("click", function () {
+      pwError.textContent = "";
+      pwInput.value = "";
+      show(screenPass);
+      pwInput.focus();
+    });
+
+    cancelBtn.addEventListener("click", function () {
+      show(screenBlock);
+    });
+
+    pwForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (pwInput.value === PASSWORD) {
+        pwError.textContent = "";
+        // Load index2.html in place via a full-window iframe so the top-level
+        // URL stays at "/" instead of changing to "/index2.html".
+        var frame = document.createElement("iframe");
+        frame.src = "index2.html";
+        frame.title = "Unlocked content";
+        frame.style.cssText =
+          "position:fixed;inset:0;width:100%;height:100%;border:0;z-index:9999;";
+        document.body.appendChild(frame);
+      } else {
+        pwError.textContent = "Incorrect password. Try again.";
+        pwInput.select();
+      }
+    });
+
+    // first screen state
+    show(screenBlock);
+  })();
+</script>
+</body>
+</html>
